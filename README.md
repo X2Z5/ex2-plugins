@@ -1,82 +1,83 @@
-# EX2 Plugins — two VST3 plugins for FL Studio (Windows + Mac)
+# EX2 Plugins
 
-You get **two plugins**:
+**Two free VST3 plugins for FL Studio (and any VST3 host) — Windows & macOS.**
 
-| Plugin | What it does |
-|---|---|
-| **EX2 Chords** | Generates J-pop / city pop / kawaii chord progressions with bounce rhythms (jersey-club style stabs). Pick a progression + bounce, hit DICE, preview it, then **drag the MIDI straight into FL's piano roll**. |
-| **EX2 Detect** | Auto-Key style analyzer. Drop it on your **Master**, press play — it shows the song's **key**, **BPM**, and **detune** (how far off A440 the tuning is, in cents, e.g. "A4 = 432.1 Hz"). |
+J-pop chords that bounce, and an Auto-Key-style analyzer that tells you any song's key, BPM, and detune.
 
-This folder is **source code**. It becomes real `.vst3` files in one of two ways — use Option A, it's much easier.
+> Built with JUCE 8 · VST3 · Windows + macOS (universal: Intel & Apple Silicon)
 
 ---
 
-## Option A (recommended): let GitHub build it for you — no coding tools needed
+## 🎹 EX2 Chords — J-pop progression & bounce generator
 
-GitHub will compile both the **Windows** and **Mac** versions automatically, for free.
+Writes real chord progressions straight into your piano roll.
 
-1. Make a free account at **github.com** (skip if you have one).
-2. Top-right **+** → **New repository** → name it `ex2-plugins` → keep **Public** → **Create repository**.
-3. On the new repo page click **uploading an existing file**, then drag **everything inside this folder** (including the `plugins` folder, `CMakeLists.txt`, etc.) into the upload box → **Commit changes**.
-4. Check that the hidden `.github` folder made it: you should see `.github/workflows/build.yml` in the repo. If it's missing (Mac hides dot-folders): click **Add file → Create new file**, type `.github/workflows/build.yml` as the name, paste the contents of that file from this folder, **Commit**.
-5. Click the **Actions** tab. A build called "Build VST3 plugins" starts by itself (if not, click it → **Run workflow**). Wait ~10 minutes for the green check.
-6. Click the finished run → scroll to **Artifacts** → download **EX2-Plugins-Windows** and/or **EX2-Plugins-macOS**. Each zip contains `EX2 Chords.vst3` and `EX2 Detect.vst3`.
+- **11 progression presets** from Japanese pop and city pop theory: Royal Road (王道進行 4-5-3-6), Komuro 6-4-5-1, Just The Two Of Us changes, Anime Canon, ii-V-I grooves, minor drama and more
+- **7 rhythm engines** that make chords *bounce*: Jersey Bounce (the classic club kick grid), Waera Bounce stabs, Pump 8ths, Offbeat Stabs, Halftime, Pads
+- **Chord flavor**: simple triads, 7th chords, or lush 9ths — with automatic smooth voice leading between chords
+- **Bass modes**: root bass or octave-bounce bass
+- **DICE** button rerolls progression + rhythm + feel instantly
+- **Preview synth** built in — hear it before you commit
+- **Drag & drop MIDI** directly into FL Studio's piano roll (or any DAW), or save as a `.mid` file
+- Optional live MIDI output: drive any synth in your project while the transport plays
 
-## Option B: build on your own computer
+## 🔍 EX2 Detect — key / BPM / detune analyzer
 
-- **Windows:** install Visual Studio Community (with "Desktop development with C++") + CMake. Then in this folder: `cmake -B build -DCMAKE_BUILD_TYPE=Release` then `cmake --build build --config Release`.
-- **Mac:** install Xcode + CMake (`brew install cmake`). Same two commands.
-- Finished plugins land in `build/plugins/*/EX2*_artefacts/Release/VST3/`.
+Drop it on your Master, press play, read the song.
+
+- **Key detection** with confidence meter + relative key (chromagram → Krumhansl-Schmuckler profile matching)
+- **Tempo detection** with confidence meter (spectral-flux onsets → autocorrelation)
+- **Detune readout**: how far the track sits from standard A440 tuning, in cents, plus the implied reference pitch (e.g. `-31.8 cents → A4 = 432.0 Hz`) — perfect for matching detuned samples
+- 100% transparent: audio passes through untouched, safe on the Master bus
+- Readings settle after ~15–20 seconds; RESET button when you switch songs
 
 ---
 
-## Installing into FL Studio
+## 📥 Download
 
-**Windows** — copy both `.vst3` folders into:
+Grab the latest build from the [**Actions** tab](../../actions): open the newest green "Build VST3 plugins" run and download the artifact for your OS (`EX2-Plugins-Windows` or `EX2-Plugins-macOS`).
+
+## 🔧 Install
+
+**Windows** — unzip, copy both `.vst3` folders to:
+
 ```
 C:\Program Files\Common Files\VST3
 ```
 
-**Mac** — copy both `.vst3` bundles into:
+**macOS** — unzip, copy both `.vst3` bundles to:
+
 ```
 /Library/Audio/Plug-Ins/VST3
 ```
-Then (Mac only) remove the "downloaded from internet" quarantine flag — open Terminal and run:
-```
+
+then clear the quarantine flag (they're unsigned):
+
+```bash
 sudo xattr -rd com.apple.quarantine "/Library/Audio/Plug-Ins/VST3/EX2 Chords.vst3" "/Library/Audio/Plug-Ins/VST3/EX2 Detect.vst3"
 ```
 
-**Then in FL Studio:** Options → Manage plugins → **Find installed plugins**. Search "EX2" in the plugin database — tick the ⭐ to favorite them.
+**FL Studio**: Options → Manage plugins → Find installed plugins → search "EX2". EX2 Chords appears under Generators, EX2 Detect under Effects.
 
----
+## 🚀 Quick start
 
-## Using EX2 Chords
+**Chords:** add EX2 Chords to a channel → pick Key + Progression + Bounce → DICE until it slaps → drag the MIDI box onto any synth's piano roll.
 
-1. Add **EX2 Chords** to a channel (it appears under Installed → Generators).
-2. Pick a **Key**, a **Progression** (Royal Road = the classic J-pop sound), and a **Bounce** (Jersey Bounce / Waera Bounce = club-style stabs).
-3. **Chord Flavor**: 7th Chords or Lush 9ths = instant J-pop color. **Bass**: Octave Bounce makes it jump.
-4. Hit **DICE** for new combos, **PREVIEW** to hear it with the built-in synth.
-5. **Drag the "DRAG MIDI INTO FL" box onto the Piano roll** of any synth (Flex, Sytrus, anything). Done — the chords are yours to edit.
-6. Optional live mode: with "MIDI out while host plays" on, set the EX2 Chords wrapper's **MIDI output port** (gear icon → VST wrapper settings) to e.g. `1`, and set your synth's **input port** to `1`. Now EX2 Chords plays that synth whenever the transport runs.
+**Detect:** drop EX2 Detect on the Master → play the song → read key, BPM and detune off the face.
 
-## Using EX2 Detect
+## 🛠 Build from source
 
-1. Drop **EX2 Detect** on the **Master** mixer track (or on the track of one song/sample).
-2. Press play. After ~15–20 seconds the readings settle:
-   - **KEY** — e.g. "F minor" (+ its relative major, and a confidence bar)
-   - **TEMPO** — detected BPM
-   - **DETUNE** — cents away from standard A440 tuning, plus the implied reference (e.g. A4 = 432.0 Hz). Use this to nudge your own instruments' master tuning to match a sample.
-3. Press **RESET** when you switch to a different song.
+Requires CMake 3.22+ and a C++17 compiler (Visual Studio 2022 / Xcode). JUCE is fetched automatically.
 
-Audio passes through untouched — it's safe to leave on the Master.
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build --config Release
+```
 
----
+Plugins land in `build/plugins/*/EX2*_artefacts/Release/VST3/`. CI builds for both platforms via the included GitHub Actions workflow (`.github/workflows/build.yml`). A console test harness (`test_harness.cpp`) verifies the chord engine and the analyzer against synthetic audio with known key/BPM/detune.
 
-## Troubleshooting
+## ⚠️ Notes
 
-- **FL doesn't find the plugins:** Options → Manage plugins → make sure the VST3 path above is in the search paths → Find installed plugins again.
-- **Mac says the plugin can't be opened / is damaged:** run the `xattr` command above (they're unsigned, that's all).
-- **GitHub Actions didn't start:** Actions tab → select "Build VST3 plugins" → "Run workflow".
-- **Key reading jumps around:** intros with no chords confuse it — let a full section with harmony play, or RESET during the chorus.
-
-Built with the JUCE framework (fetched automatically at build time, licensed under its own terms — fine for personal use; the splash screen on load is JUCE's free-tier requirement).
+- Detection is an estimate — ambiguous intros, heavy drums-only sections, or modal tracks can fool any key detector. Let a full harmonic section play.
+- Not affiliated with Image-Line, Antares, or the artist waera — "Waera Bounce" is just a rhythm preset inspired by that style of Japanese club bounce.
+- Built on the [JUCE framework](https://juce.com) (fetched at build time, subject to its own license). Plugin code is free to use and modify for personal projects.
