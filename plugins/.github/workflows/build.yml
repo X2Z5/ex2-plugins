@@ -1,0 +1,43 @@
+name: Build VST3 plugins
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build (${{ matrix.name }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            name: Windows
+            cmake_extra: ""
+          - os: macos-latest
+            name: macOS
+            cmake_extra: -DCMAKE_OSX_ARCHITECTURES=arm64;x86_64 -DCMAKE_OSX_DEPLOYMENT_TARGET=10.13
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_extra }}
+
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+
+      - name: Collect plugins
+        shell: bash
+        run: |
+          mkdir -p out
+          find build -type d -name "*.vst3" -path "*Release*" -exec cp -r {} out/ \;
+          ls -la out
+
+      - name: Upload plugins
+        uses: actions/upload-artifact@v4
+        with:
+          name: EX2-Plugins-${{ matrix.name }}
+          path: out
